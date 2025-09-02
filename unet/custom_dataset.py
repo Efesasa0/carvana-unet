@@ -1,7 +1,5 @@
 import os
-import random
 from PIL import Image
-import torchvision.transforms.functional as TF
 from torch.utils.data.dataset import Dataset
 
 class CustomDataset(Dataset):
@@ -18,13 +16,6 @@ class CustomDataset(Dataset):
     def custom_transform(self, img, mask):
         if self.transform:
             img, mask = self.transform(img), self.transform(mask)
-
-        if random.random() > 0.5:
-            img = TF.hflip(img)
-            mask = TF.hflip(mask)
-        if random.random() > 0.5:
-            img = TF.vflip(img)
-            mask = TF.vflip(mask)
     
         return img, mask
 

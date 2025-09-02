@@ -1,6 +1,5 @@
-import torch
 import torch.nn as nn
-from model_parts import DownSample, UpSample, DoubleConv
+from unet.model_parts import DownSample, UpSample, DoubleConv
 
 class Unet(nn.Module):
     def __init__(self, in_channels=3, out_channels=1, feats=(64, 128, 256, 512)):
@@ -42,6 +41,7 @@ class Unet(nn.Module):
         return self.finalconv(x)
 
 """if __name__ == "__main__":
+    import torch
 
     x = torch.randn(2,3,160,160) #B, C, H, W
     model = Unet(in_channels=3, out_channels=10, feats=[64, 128, 256])
