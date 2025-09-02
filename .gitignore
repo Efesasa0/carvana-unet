@@ -2,6 +2,7 @@ __pycache__/
 .ipynb_checkpoints/
 .DS_Store
 *.env
-/data/train
-/data/train_masks
-*/data/
+data/train
+data/train_masks
+data/*
+logs/*

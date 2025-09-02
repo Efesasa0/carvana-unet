@@ -4,6 +4,7 @@ from torchvision import transforms
 from torch.utils.data import DataLoader, random_split
 from tqdm import tqdm
 import matplotlib.pyplot as plt
+import json
 import numpy as np
 torch.manual_seed(42)
 
@@ -17,6 +18,7 @@ X_TEST_PATH = "data/manual_test/"
 Y_TEST_PATH = "data/manual_test_masks/"
 MODEL_SAVE_PATH = "weights/unet.pth"
 FIGURE_SAVE_PATH = "assets/"
+LOGS_SAVE_PATH = "logs/"
 FEATS = [64, 128] #, 256, 512, 1024]
 LEARNING_RATE = 1e-3
 BATCH_SIZE = 32
@@ -29,7 +31,7 @@ transform = transforms.Compose([
     transforms.Resize(IMG_SHAPE),
     transforms.ToTensor()
     ])
-train_dataset = CustomDataset(X_path=X_TEST_PATH, Y_path=Y_TEST_PATH, transform=transform)
+train_dataset = CustomDataset(X_path=X_PATH, Y_path=Y_PATH, transform=transform)
 generator = torch.Generator().manual_seed(23)
 train_dataset, val_dataset = random_split(train_dataset, [0.8, 0.2], generator=generator)
 train_dataloader = DataLoader(dataset=train_dataset,
@@ -47,8 +49,8 @@ for epoch in tqdm(range(EPOCHS)):
     train_running_loss = 0
     for idx, img_mask in enumerate(tqdm(train_dataloader)):
         img, mask = img_mask
+        mask = (mask>0.5).float().to(device)
         img = img.float().to(device)
-        mask = mask.float().to(device)
         
         y_pred = model(img)
         optimizer.zero_grad()
@@ -94,3 +96,8 @@ ax.set_title("Loss Plot")
 plt.legend()
 plt.savefig(FIGURE_SAVE_PATH+"loss_plot.png")
 plt.show()
+
+file_name = f"log{str(IMG_SHAPE[0])}-{''.join(str(i) for i in [FEATS])}-{BATCH_SIZE}-{EPOCHS}-{LEARNING_RATE}.json"
+with open(LOGS_SAVE_PATH+file_name, 'w') as fp:
+    json.dump([train_losses, val_losses], fp)
+print(f"Saved logs to {LOGS_SAVE_PATH+file_name}")
