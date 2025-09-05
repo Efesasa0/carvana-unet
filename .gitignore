@@ -5,4 +5,3 @@ __pycache__/
 data/train
 data/train_masks
 data/*
-logs/*
