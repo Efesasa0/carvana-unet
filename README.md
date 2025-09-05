@@ -26,6 +26,7 @@ Implementation of the U-Net architecture trained on the Carvana Image masking da
     git clone git@github.com:Efesasa0/carvana-unet.git
     cd carvana-unet
     pip install -r requirements.txt
+    python train_val.py
 ```
 
 ### Dataset
